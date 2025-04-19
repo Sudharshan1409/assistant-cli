@@ -18,8 +18,12 @@ AI Assistant CLI is a command-line interface tool designed to manage and interac
 1. **Clone the repository**:
 
    ```bash
-   git clone <repository-url>
-   cd ai-assistant-cli
+   # for SSH
+   git clone git@github.com:Sudharshan1409/ai-cli.git
+   cd ai-cli
+   # for HTTPS
+   git clone https://github.com/Sudharshan1409/ai-cli.git
+   cd ai-cli
    ```
 
 2. **Install dependencies**:
@@ -36,6 +40,20 @@ AI Assistant CLI is a command-line interface tool designed to manage and interac
    ```
 
 ## Usage
+
+### Commands
+
+- **new**: Start a new chat session.
+
+  - **Options**:
+    - `--session-name`, `-s`: Optional name for the chat session.
+  - **Description**: This command initializes a new chat session. You can optionally provide a session name to better organize your sessions.
+
+- **resume**: Resume a previous chat session.
+
+  - **Arguments**:
+    - `session_id`: The ID of the session you want to resume.
+  - **Description**: This command allows you to continue a chat session from where you left off by providing the session ID.
 
 - **Create a new session**: Use the CLI to start a new chat session.
 - **Save messages**: Messages are automatically saved to the session file.
