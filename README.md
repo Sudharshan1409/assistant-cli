@@ -21,6 +21,7 @@ AI Assistant CLI is a command-line interface tool designed to manage and interac
    # for SSH
    git clone git@github.com:Sudharshan1409/ai-cli.git
    cd ai-cli
+
    # for HTTPS
    git clone https://github.com/Sudharshan1409/ai-cli.git
    cd ai-cli
