@@ -7,28 +7,49 @@ A powerful and user-friendly command-line interface (CLI) to interact with OpenA
 
 ## Overview
 
-This CLI provides a seamless way to chat with AI models directly from your terminal. It supports persistent chat sessions, allowing you to resume conversations later. It features automatic session naming based on your first prompt, interactive menus for resuming and deleting sessions, beautiful Markdown rendering for responses (including code syntax highlighting), and helpful in-chat commands.
+This CLI provides a seamless way to chat with AI models directly from your terminal. It supports both interactive chat sessions and direct non-interactive prompting.
+
+**Interactive Sessions:** Start, resume, list, and delete persistent chat sessions with automatic session naming, rich Markdown rendering, loading indicators, file uploads, and in-chat commands (including editing multi-line input via `$EDITOR`).
+
+**Direct Prompting:** Get quick answers from the AI without entering an interactive session. Supports piping data via `stdin`, providing file context, choosing output formats (Markdown, raw text, JSON), and saving results directly to files.
 
 ## Features
 
-- **Interactive Chat:** Engage in conversation with OpenAI models.
-- **Persistent Sessions:** Automatically saves chat history.
-  - **Resume:** Pick up previous conversations exactly where you left off.
-  - **List:** View all saved chat sessions.
-  - **Delete:** Interactively select and delete unwanted sessions.
-- **Automatic Session Naming:** If you don't provide a name, the CLI uses AI to generate a relevant name based on your first message.
-- **User-Defined Session Names:** Optionally name your sessions for better organization.
-- **Rich Output:** AI responses are rendered using Markdown for better readability:
+- **Interactive Chat Sessions (`session` command):**
+  - Start new sessions (`session new`), optionally named (`--name`) or automatically named based on the first prompt.
+  - Resume previous sessions via an interactive list (`session resume`).
+  - List all saved sessions (`session list`), sorted by modification time (latest first).
+  - Delete one or more sessions via an interactive checklist (`session delete`).
+  - Persistent history saved for each session.
+- **Direct Prompting (`prompt` command):**
+  - Send a single prompt directly: `prompt "Your question"`
+  - **Pipe `stdin`:** Process piped data: `cat file.txt | prompt "Summarize:"`
+  - **File Context:** Provide a file as context: `prompt "Explain code" -f script.py` (Note: `stdin` takes precedence over `-f`).
+  - **Output Formats:** Choose output: `markdown` (default), `raw`, `json` using `--output-format` (`-of`).
+  - **Save to File:** Save the response directly: `prompt "Generate code" -o code.py`
+- **Rich Output:** AI responses rendered using Markdown (default) for better readability:
   - Headings, lists, bold, italics, etc.
   - Syntax highlighting for code blocks (`python ... `).
-- **Loading Indicator:** Shows a spinner animation while waiting for the AI response.
-- **In-Chat Commands:** Manage your session on the fly:
+- **Loading Indicator:** Shows a spinner animation while waiting for the AI response (both interactive and direct prompt).
+- **File Handling (Interactive Session):**
+  - Stage one or more files using `/upload [path]` or `/upload` (with `fzf` installed) to include their content in the _next_ prompt.
+  - Check pending files with `/status`.
+  - Clear pending files with `/clearfiles`.
+  - Prevents adding the same file multiple times.
+  - Configurable max file size and allowed extensions.
+- **External Editor Support (Interactive Session):**
+  - Use `/edit` command to open your default `$EDITOR` for composing multi-line input easily.
+- **In-Chat Commands (Interactive Session):**
   - `/help`: Show available commands.
   - `/rename <new-name>`: Rename the current session.
   - `/history`: Display the conversation history so far.
   - `/clear`: Clear the history for the current session (irreversible!).
+  - `/upload [path]`: Stage a file.
+  - `/edit`: Open `$EDITOR` for input.
+  - `/status`: View staged files.
+  - `/clearfiles`: Remove staged files.
   - `/exit` or `/quit`: End the current chat session.
-- **Secure Configuration:** Interactively set up your OpenAI API key and preferred model. Configuration is stored locally.
+- **Secure Configuration:** Interactively set up your OpenAI API key and preferred model via `setup configure`. Reads `OPENAI_API_KEY` env var. Configuration stored locally.
 
 ## Installation
 
@@ -37,14 +58,15 @@ This CLI provides a seamless way to chat with AI models directly from your termi
 - Python 3.8 or higher.
 - `pip` (Python package installer).
 - An OpenAI account and API key. ([Get one here](https://platform.openai.com/signup))
+- **(Optional but Recommended for `/upload`):** `fzf` ([Install Instructions](https://github.com/junegunn/fzf#installation)) for interactive file selection.
 
 **Steps:**
 
 1.  **Clone the repository:**
 
     ```bash
-    git clone <your-repository-url> # Replace with your repo URL
-    cd <repository-directory>
+    git clone https://github.com/Sudharshan1409/ai-cli.git # Replace with your repo URL
+    cd ai-cli
     ```
 
 2.  **Create and activate a virtual environment (Recommended):**
@@ -64,11 +86,11 @@ This CLI provides a seamless way to chat with AI models directly from your termi
     ```bash
     pip install "typer[all]" rich openai questionary
     ```
-    _(Alternatively, if you create a `requirements.txt` file with the above packages listed, you can run `pip install -r requirements.txt`)_
+    _(Or create `requirements.txt` and run `pip install -r requirements.txt`)_
 
 ## Configuration
 
-Before you can start chatting, you need to configure your OpenAI API key and choose a default model.
+Set up your OpenAI API key and choose a default model before use.
 
 1.  **Run the setup command:**
 
@@ -78,92 +100,88 @@ Before you can start chatting, you need to configure your OpenAI API key and cho
 
 2.  **Follow the prompts:**
 
-    - You will be asked to enter your OpenAI API key.
-    - You will be asked to choose a model from a list (e.g., `gpt-4o`, `gpt-4-turbo`, `gpt-3.5-turbo`).
+    - It checks for the `OPENAI_API_KEY` environment variable or the `--openai-api-key` / `-k` option first.
+    - If found, it asks for confirmation before using the detected key.
+    - If not found or you decline confirmation, it prompts you to enter your key securely.
+    - You will be asked to choose a model from a list (e.g., `gpt-4o`, `gpt-4-turbo`, `gpt-3.5-turbo`) using an interactive menu.
 
-3.  **Alternatively, provide options directly (less secure for API key):**
-
-    ```bash
-    python main.py setup configure --openai-api-key "sk-..." --model "gpt-4o"
-    ```
-
-4.  **View current configuration:**
-    To see your currently saved settings (API key will be partially masked):
+3.  **View current configuration:**
     ```bash
     python main.py setup view
     ```
 
-Your configuration is saved securely in `~/.ai-cli/config/config.json`.
+Your configuration is saved in `~/.ai-cli/config/config.json`.
 
 ## Usage
 
 All commands are run via the `main.py` script.
 
-### Starting a New Chat
+### Interactive Sessions (`session` commands)
 
-- **With automatic naming:** The session will be named based on your first prompt.
+- **Start New:**
+  - `python main.py session new` (Auto-named)
+  - `python main.py session new --name "my-session"` (User-named)
+- **Resume Session:**
+  - `python main.py session resume` (Interactive list)
+- **List Sessions:**
+  - `python main.py session list` (Sorted list)
+- **Delete Sessions:**
+  - `python main.py session delete` (Interactive multi-select)
+
+### Direct Prompting (`prompt` command)
+
+- **Basic Prompt:**
+  ```bash
+  python main.py prompt "Translate 'hello world' to French"
+  ```
+- **With Piped Data:**
+  ```bash
+  cat code.py | python main.py prompt "Explain this Python code"
+  ```
+- **With File Context:**
+  ```bash
+  python main.py prompt "Summarize this document" --file report.txt
+  # Note: If both stdin and --file are used, stdin takes precedence.
+  ```
+- **Specify Output Format:**
 
   ```bash
-  python main.py chat new
+  # Get raw text output
+  python main.py prompt "Generate a list of colors" --output-format raw
+
+  # Attempt to get JSON output
+  python main.py prompt "Info for London: population, timezone as JSON" -of json
   ```
 
-  After you enter your first message, the CLI will generate and assign a name (e.g., `discuss-python-features_a1b2c3d4`).
+- **Save Output to File:**
 
-- **With a specific name:**
   ```bash
-  python main.py chat new --name "my-project-ideas"
+  python main.py prompt "Write a Dockerfile for a basic Python app" -o Dockerfile
+
+  # Combine with other options
+  cat data.json | python main.py prompt "Convert this to YAML" -of raw -o data.yaml
   ```
-  This will create a session named `my-project-ideas` (with a unique ID suffix, e.g., `my-project-ideas_e5f6a7b8`).
 
-### Resuming a Chat
+### In-Chat Commands (during `session new` or `session resume`)
 
-This command lists your saved sessions interactively. Use arrow keys to select and Enter to resume.
-
-```bash
-python main.py chat resume
-```
-
-### Listing Sessions
-
-To see a non-interactive list of all saved session display names:
-
-```bash
-python main.py chat list
-```
-
-### Deleting a Chat
-
-This command lists your saved sessions interactively. Select the session you want to delete and confirm.
-
-```bash
-python main.py chat delete
-```
-
-### In-Chat Commands
-
-While inside an active chat session, type these commands instead of a regular message:
-
-- `/help`: Shows this list of in-chat commands.
-- `/rename <new-name>`: Renames the current session. Example: `/rename python-debugging`
-- `/history`: Prints the conversation history loaded in the current session.
-- `/clear`: Asks for confirmation, then clears all messages from the current session file. **Use with caution!**
-- `/exit` or `/quit`: Saves the current session and exits the chat interaction loop.
+- `/help`: Show commands.
+- `/rename <new-name>`: Rename session.
+- `/history`: Show conversation.
+- `/clear`: Clear conversation history (requires confirmation).
+- `/upload [path]`: Stage file(s) for next prompt (use path or `fzf`).
+- `/edit`: Open `$EDITOR` for multi-line input.
+- `/status`: Show staged files.
+- `/clearfiles`: Remove all staged files.
+- `/exit` or `/quit`: Exit session.
 
 ## Session Storage
 
-Chat session history is stored as JSON files in the `~/.ai-cli/chat_sessions/` directory. Each file is named using the pattern `session-display-name_uniqueID.json`. The unique ID ensures that even if multiple sessions get the same automatically generated name, their files remain distinct. The listing, resuming, and deleting commands primarily show the `session-display-name` part for user-friendliness.
+Chat session history is stored as JSON files in the `~/.ai-cli/chat_sessions/` directory using the pattern `session-display-name_uniqueID.json`.
 
 ## Contributing (Optional Placeholder)
 
-Contributions are welcome! Please feel free to submit pull requests or open issues for bugs and feature requests.
-
-1.  Fork the repository.
-2.  Create a new branch (`git checkout -b feature/your-feature`).
-3.  Make your changes.
-4.  Commit your changes (`git commit -am 'Add some feature'`).
-5.  Push to the branch (`git push origin feature/your-feature`).
-6.  Create a new Pull Request.
+Contributions are welcome! Please follow standard fork/branch/PR procedures.
 
 ## License (Optional Placeholder)
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. (You'll need to create a LICENSE file if you choose one).
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
