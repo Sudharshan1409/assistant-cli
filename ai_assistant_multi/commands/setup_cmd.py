@@ -17,10 +17,10 @@ from rich import print as rich_print
 from rich.markup import escape
 
 # Import provider definitions from the central constants file
-from constants import PROVIDER_CONFIG
+from ..constants import PROVIDER_CONFIG
 
 # Import configuration handling logic and error type
-from utils.config_manager import ConfigError, ConfigManager
+from ..utils.config_manager import ConfigError, ConfigManager
 
 # Create a Typer app for the 'setup' subcommands
 app = typer.Typer(help="Configure application settings for AI providers.")

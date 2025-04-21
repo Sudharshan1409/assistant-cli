@@ -78,46 +78,11 @@ This CLI provides a seamless way to interact with Large Language Models (LLMs) d
   - `eza`: Provides tree view previews for directories in `fzf`. ([Install Instructions](#installing-optional-dependencies))
   - A configured `$EDITOR` environment variable (e.g., `vim`, `nano`, `code`) for the `/edit` command.
 
-**Steps:**
+**Installation Command:**
 
-1.  **Clone the repository:**
-
-    ```bash
-    git clone https://github.com/Sudharshan1409/assistant-cli
-    cd assistant-cli
-    ```
-
-2.  **Create and activate a virtual environment (Recommended):**
-
-    ```bash
-    # macOS / Linux
-    python3 -m venv venv
-    source venv/bin/activate
-
-    # Windows (Command Prompt/PowerShell)
-    python -m venv venv
-    .\venv\Scripts\activate
-    ```
-
-3.  **Install Python dependencies:**
-
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-    _(Make sure `requirements.txt` contains `typer[all]`, `rich`, `questionary`, `openai`, `google-generativeai`)_
-
-4.  **(Optional) Install External Tools:** See the section [Installing Optional Dependencies](#installing-optional-dependencies) below for instructions.
-
-5.  **(Optional) Make the CLI executable globally (Example):**
-    You might want to create a symbolic link or an alias to run the CLI easily from anywhere.
-    - **Example (Linux/macOS):**
-      ```bash
-      # Ensure ~/.local/bin is in your PATH
-      ln -s "$(pwd)/main.py" ~/.local/bin/ai-cli
-      chmod +x main.py
-      # Now you can run 'ai-cli' instead of 'python main.py'
-      ```
+```bash
+pip install ai-assistant-multi
+```
 
 ## Installing Optional Dependencies
 
@@ -161,7 +126,8 @@ These tools significantly enhance the interactive experience. Install them using
   ```bash
   export EDITOR=vim # Or nano, emacs, micro, helix, etc.
   ```
-  Reload your shell or run `source ~/.your_shell_rc_file` for the change to take effect.
+
+Reload your shell or run `source ~/.your_shell_rc_file` for the change to take effect.
 
 ## Configuration
 
@@ -299,3 +265,7 @@ _(Optionally add more specific contribution guidelines here: e.g., coding style,
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+```
+
+```

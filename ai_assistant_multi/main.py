@@ -13,14 +13,14 @@ import typer
 from rich import print as rich_print
 
 # Import command modules/apps/functions
-from commands import session_cmd, setup_cmd
+from .commands import session_cmd, setup_cmd
 
 # Import the implementation logic for direct prompt command
 # This is needed because the 'prompt' command is defined at the top level here
-from commands.session_cmd import direct_prompt_logic
+from .commands.session_cmd import direct_prompt_logic
 
 # Import constants used directly in this file
-from constants import APP_NAME, APP_VERSION, OUTPUT_FORMAT_CHOICES
+from .constants import APP_NAME, APP_VERSION, OUTPUT_FORMAT_CHOICES
 
 # Create the main Typer application instance
 app = typer.Typer(
@@ -110,7 +110,7 @@ def prompt_command_wrapper(
 @app.command("version")
 def show_version():
     """Displays the application's version."""
-    rich_print(f"{APP_NAME} v{APP_VERSION}")
+    rich_print(f"name: {APP_NAME} version: {APP_VERSION}")
 
 
 # Entry point for running the script directly

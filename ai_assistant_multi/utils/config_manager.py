@@ -15,8 +15,8 @@ from typing import Any, Dict, List, Optional
 from rich import print as rich_print
 
 # Import constants from the central file
-from constants import CONFIG_DIR  # Import directory path too
-from constants import DEFAULT_CONFIG_PATH, PROVIDER_CONFIG
+from ..constants import CONFIG_DIR  # Import directory path too
+from ..constants import DEFAULT_CONFIG_PATH, PROVIDER_CONFIG
 
 
 class ConfigError(Exception):

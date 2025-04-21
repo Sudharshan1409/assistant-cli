@@ -22,7 +22,7 @@ from rich.table import Table
 from rich.text import Text
 
 # Import constants
-from constants import (
+from ..constants import (
     ALLOWED_UPLOAD_EXTENSIONS,
     DEFAULT_CODE_THEME,
     EDITOR_ENV_VAR,
@@ -32,8 +32,8 @@ from constants import (
 )
 
 # Core utilities and base classes
-from utils.base_client import AIClientError, BaseAIClient
-from utils.session_manager import SessionError, SessionManager
+from ..utils.base_client import AIClientError, BaseAIClient
+from ..utils.session_manager import SessionError, SessionManager
 
 
 class ChatSession:

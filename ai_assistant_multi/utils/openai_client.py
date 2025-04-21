@@ -23,8 +23,7 @@ except ImportError:
         pass
 
 
-from constants import PROVIDER_CONFIG  # Import for default temp
-
+from ..constants import PROVIDER_CONFIG  # Import for default temp
 from .base_client import AIClientError, BaseAIClient
 
 

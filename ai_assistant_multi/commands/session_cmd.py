@@ -21,7 +21,7 @@ from rich.markdown import Markdown
 from rich.markup import escape
 
 # Import relevant constants
-from constants import (
+from ..constants import (
     ALLOWED_UPLOAD_EXTENSIONS,
     DEFAULT_CODE_THEME,
     MAX_UPLOAD_SIZE_KB,
@@ -29,14 +29,14 @@ from constants import (
 )
 
 # Import core components and utilities
-from core.chat_session import ChatSession
-from utils.base_client import AIClientError, BaseAIClient
-from utils.config_manager import PROVIDER_CONFIG, ConfigError, ConfigManager
+from ..core.chat_session import ChatSession
+from ..utils.base_client import AIClientError, BaseAIClient
+from ..utils.config_manager import PROVIDER_CONFIG, ConfigError, ConfigManager
 
 # Import specific client implementations (needed for instantiation)
-from utils.google_client import GoogleAIClient
-from utils.openai_client import OpenAIClient
-from utils.session_manager import SessionError, SessionManager
+from ..utils.google_client import GoogleAIClient
+from ..utils.openai_client import OpenAIClient
+from ..utils.session_manager import SessionError, SessionManager
 
 # Console instances for distinct output streams
 console = Console()  # For standard output (e.g., Markdown responses, prompts)

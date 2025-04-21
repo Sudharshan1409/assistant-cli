@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 # Import constants
-from constants import MAX_SESSION_NAME_LEN, SESSION_DIR, SESSION_ID_SUFFIX_RE
+from ..constants import MAX_SESSION_NAME_LEN, SESSION_DIR, SESSION_ID_SUFFIX_RE
 
 
 class SessionError(Exception):

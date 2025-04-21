@@ -8,8 +8,8 @@ from pathlib import Path
 from typing import Dict, List, Pattern, Set
 
 # --- Application Info ---
-APP_NAME = "ai-cli"
-APP_VERSION = "1.5.0"  # Example version
+APP_NAME = "ai-assistant-multi"
+APP_VERSION = "0.1.1"
 
 # --- Configuration Paths ---
 APP_DIR: Path = Path.home() / f".{APP_NAME}"
@@ -33,6 +33,7 @@ PROVIDER_CONFIG: Dict[str, Dict[str, any]] = {
         "required_keys": ["api_key", "model"],
         "env_var": "GOOGLE_API_KEY",
         "models": [
+            "gemini-2.5-flash-preview-04-17",
             "gemini-1.5-pro-latest",
             "gemini-1.5-flash-latest",
             "gemini-1.0-pro",  # Often equivalent to gemini-pro

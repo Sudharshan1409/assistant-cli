@@ -33,8 +33,7 @@ except ImportError:
     genai = None  # type: ignore
 
 
-from constants import PROVIDER_CONFIG  # Import for default temp
-
+from ..constants import PROVIDER_CONFIG  # Import for default temp
 from .base_client import AIClientError, BaseAIClient
 
 # Define safety settings using the (potentially dummy) HarmCategory types
