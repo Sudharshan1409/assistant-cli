@@ -9,7 +9,7 @@ from typing import Dict, List, Pattern, Set
 
 # --- Application Info ---
 APP_NAME = "ai-assistant-multi"
-APP_VERSION = "0.1.0"
+APP_VERSION = "0.0.1"
 
 # --- Configuration Paths ---
 APP_DIR: Path = Path.home() / f".{APP_NAME}"
