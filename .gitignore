@@ -1,1 +1,3 @@
 improvements.txt
+*.egg-info
+dist/*
